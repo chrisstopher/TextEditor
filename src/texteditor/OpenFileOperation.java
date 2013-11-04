@@ -43,6 +43,7 @@ public class OpenFileOperation implements Operation {
             tabs.setFileOfCurrentTab(file);
         }
         tabs.setTextPaneOfCurrentTab(Util.readFrom(file.toString()));
+        tabs.removeSymbolOnCurrentTab();
     }
 }
 

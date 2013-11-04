@@ -3,10 +3,10 @@ package texteditor;
 import java.io.File;
 
 public class OpenLastFileClosed implements Operation {
-    private Tabs tabs;
-    private ClosedFiles closedFiles;
+	final private Tabs tabs;
+	final private ClosedFiles closedFiles;
     
-    public OpenLastFileClosed(Tabs newTabs, ClosedFiles newClosedFiles) {
+    public OpenLastFileClosed(final Tabs newTabs, final ClosedFiles newClosedFiles) {
         tabs = newTabs;
         closedFiles = newClosedFiles;
     }
@@ -16,6 +16,7 @@ public class OpenLastFileClosed implements Operation {
         if (!closedFiles.isEmpty()) {
             File file = closedFiles.pop();
             tabs.addNewTab(file, Util.readFrom(file.toString()));
+            tabs.removeSymbolOnCurrentTab();
         }
     }
 }
