@@ -25,15 +25,18 @@ public class SaveOperation implements Operation {
                 assignTab(fileChooser.getSelectedFile());
             }
         } else {
-            Util.writeTo(tabs.getFileOfCurrentTab(), tabs.getCurrentTextPane().getText());
-            tabs.removeSymbolOnCurrentTab();
+        	saveFile(file);
         }
     }
     
     private void assignTab(File file) {
         tabs.setTitleOfCurrentTab(file.getName());
         tabs.setFileOfCurrentTab(file);
-        Util.writeTo(file, tabs.getCurrentTextPane().getText());
+        saveFile(file);
+    }
+    
+    private void saveFile(File file) {
+    	Util.writeTo(file, tabs.getCurrentTextPane().getText());
         tabs.removeSymbolOnCurrentTab();
     }
 }
