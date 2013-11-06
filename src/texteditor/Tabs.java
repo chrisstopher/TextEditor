@@ -5,6 +5,8 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 
@@ -13,6 +15,8 @@ public class Tabs implements MouseListener {
     private ArrayList<TextArea> scrollingTextAreas;
     public static final String DEFAULT_TITLE = "Untitled";
     private ClosedFiles closedFiles;
+    
+    private static final String NOT_SAVED_SYMBOL = "*";
     
     public Tabs(ClosedFiles newClosedFiles) {
         tabs = new JTabbedPane();
@@ -40,6 +44,11 @@ public class Tabs implements MouseListener {
         return scrollingTextAreas.get(tabs.getSelectedIndex()).getFile();
     }
     
+    public void renameCurrentFileTo(String name) {
+    	setTitleOfCurrentTab(name);
+    	scrollingTextAreas.get(tabs.getSelectedIndex()).renameTo(name);
+    }
+    
     public void setTextPaneOfCurrentTab(ArrayList<String> strings) {
         StringBuilder strBuilder = new StringBuilder();
         for (String s : strings) {
@@ -61,7 +70,7 @@ public class Tabs implements MouseListener {
     }
     
     public void addNewTab(String title, File newFile) {
-        scrollingTextAreas.add(new TextArea(this));
+        scrollingTextAreas.add(new TextArea(new UpdateTabTitleDocOperation(this)));
         tabs.addTab(title, scrollingTextAreas.get(scrollingTextAreas.size() - 1).getScrollPane());
         tabs.setSelectedIndex(tabs.getTabCount() - 1);
         setFileOfCurrentTab(newFile);
@@ -76,20 +85,65 @@ public class Tabs implements MouseListener {
         setTextPaneOfCurrentTab(text);
     }
     
+    public void removeCurrentTab() {
+        removeTab(tabs.getSelectedIndex());
+    }
+    
+    public void removeTab(int index) {
+        if (!scrollingTextAreas.get(index).getFile().toString().equals(DEFAULT_TITLE)) {
+            closedFiles.push(scrollingTextAreas.get(index).getFile());
+        }
+        tabs.remove(index);
+        scrollingTextAreas.remove(index);
+    }
+    
+    public void removeAllTabs() {
+    	while (tabs.getTabCount() != 0) {
+    		removeTab(0);
+    	}
+    }
+    
     public void addSymbolOnCurrentTab() {
         String currentTitle = tabs.getTitleAt(tabs.getSelectedIndex());
-        if (!currentTitle.endsWith("*")) {
-            tabs.setTitleAt(tabs.getSelectedIndex(), currentTitle + '*');
+        if (!currentTitle.endsWith(NOT_SAVED_SYMBOL)) {
+            tabs.setTitleAt(tabs.getSelectedIndex(), currentTitle + NOT_SAVED_SYMBOL);
         }
     }
     
     public void removeSymbolOnCurrentTab() {
         String currentTitle = tabs.getTitleAt(tabs.getSelectedIndex());
-        tabs.setTitleAt(tabs.getSelectedIndex(), currentTitle.substring(0, currentTitle.length() - 1));
+        if (currentTitle.endsWith(NOT_SAVED_SYMBOL)) {
+        	tabs.setTitleAt(tabs.getSelectedIndex(), currentTitle.substring(0, currentTitle.length() - 1));
+        }
+    }
+    
+    public boolean currentTabNotSaved() {
+    	return tabNotSaved(tabs.getSelectedIndex());
+    }
+    
+    private boolean tabNotSaved(int i) {
+    	return tabs.getTitleAt(i).endsWith(NOT_SAVED_SYMBOL);
+    }
+    
+    public boolean anyOpenFileNotSaved() {
+    	for (int i = 0; i < tabs.getTabCount(); i++) {
+    		if (tabs.getTitleAt(i).endsWith(NOT_SAVED_SYMBOL)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    public void saveAllFiles() {
+    	for (int i = 0; i < tabs.getTabCount(); i++) {
+    		if (tabNotSaved(i)) {
+    			Util.writeTo(scrollingTextAreas.get(i).getFile(), scrollingTextAreas.get(i).getTextPane().getText());
+    		}
+    	}
+    	
     }
     
     /**
-     * 
      * @param file
      * @return The index of where the file is in the tabs if it is not in the tabs it is -1
      */
@@ -110,25 +164,12 @@ public class Tabs implements MouseListener {
         return scrollingTextAreas;
     }
     
-    
     public JTabbedPane getTabbedPane() {
         return tabs;
     }
     
     public JTextPane getCurrentTextPane() {
         return scrollingTextAreas.get(tabs.getSelectedIndex()).getTextPane();
-    }
-    
-    public void removeCurrentTab() {
-        removeTab(tabs.getSelectedIndex());
-    }
-    
-    public void removeTab(int index) {
-        if (!scrollingTextAreas.get(index).getFile().toString().equals(DEFAULT_TITLE)) {
-            closedFiles.push(scrollingTextAreas.get(index).getFile());
-        }
-        tabs.remove(index);
-        scrollingTextAreas.remove(index);
     }
 
     @Override
@@ -158,7 +199,23 @@ public class Tabs implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if (e.getButton() == MouseEvent.BUTTON2) {
-            removeCurrentTab();
+        	if (currentTabNotSaved()) {
+        		String[] options = {
+        			"Yes", "No", "Cancel"
+        		};
+        		int picked = JOptionPane.showOptionDialog(null, "Save changes to " + getFileOfCurrentTab().getName(), "Text Editor",
+			        									  JOptionPane.YES_NO_CANCEL_OPTION,
+			        									  JOptionPane.WARNING_MESSAGE,
+			        									  null, options, options[0]);
+        		if (picked == JOptionPane.YES_OPTION || picked == JOptionPane.NO_OPTION) {
+        			if (picked == JOptionPane.YES_OPTION) {
+        				Util.writeTo(getFileOfCurrentTab(), getCurrentTextPane().getText());
+        			}
+        			removeCurrentTab();
+        		}
+        	} else {
+        		removeCurrentTab();
+        	}
         }
     }
 }
