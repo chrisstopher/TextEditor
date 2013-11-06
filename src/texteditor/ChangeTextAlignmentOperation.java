@@ -1,9 +1,11 @@
 package texteditor;
 
+import java.awt.event.ActionEvent;
+
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
-public class ChangeTextAlignmentOperation implements Operation {
+public class ChangeTextAlignmentOperation implements ActionEventOperation {
     
     private Tabs tabs;
     private final int alignment;
@@ -14,7 +16,7 @@ public class ChangeTextAlignmentOperation implements Operation {
     }
 
     @Override
-    public void operate() {
+    public void actionPerformed(ActionEvent e) {
         SimpleAttributeSet attr = new SimpleAttributeSet(tabs.getCurrentTextPane().getParagraphAttributes());
         StyleConstants.setAlignment(attr, alignment);
         tabs.getCurrentTextPane().setParagraphAttributes(attr, true);

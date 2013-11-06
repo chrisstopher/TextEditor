@@ -1,6 +1,8 @@
 package texteditor;
 
-public class CloseCurrentTabOperation implements Operation {
+import java.awt.event.ActionEvent;
+
+public class CloseCurrentTabOperation implements ActionEventOperation {
     private Tabs tabs;
     
     public CloseCurrentTabOperation(Tabs newTabs) {
@@ -8,7 +10,7 @@ public class CloseCurrentTabOperation implements Operation {
     }
     
     @Override
-    public void operate() {
+    public void actionPerformed(ActionEvent e) {
         tabs.removeCurrentTab();
     }
 }

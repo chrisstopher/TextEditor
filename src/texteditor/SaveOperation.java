@@ -1,10 +1,11 @@
 package texteditor;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
 
-public class SaveOperation implements Operation {
+public class SaveOperation implements ActionEventOperation {
     private JFileChooser fileChooser;
     private Tabs tabs;
     private Frame mainFrame;
@@ -17,7 +18,7 @@ public class SaveOperation implements Operation {
     }
     
     @Override
-    public void operate() {
+    public void actionPerformed(ActionEvent e) {
         File file = tabs.getFileOfCurrentTab();
         if (file.toString() == Tabs.DEFAULT_TITLE || !file.exists()) {
             int returnVal = fileChooser.showOpenDialog(mainFrame);

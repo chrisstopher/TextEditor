@@ -1,6 +1,8 @@
 package texteditor;
 
-public class AddNewTabOperation implements Operation {
+import java.awt.event.ActionEvent;
+
+public class AddNewTabOperation implements ActionEventOperation {
     private Tabs tabs;
     
     public AddNewTabOperation(Tabs newTabs) {
@@ -8,7 +10,7 @@ public class AddNewTabOperation implements Operation {
     }
 
     @Override
-    public void operate() {
+    public void actionPerformed(ActionEvent e) {
         tabs.addNewTab();
     }
 }

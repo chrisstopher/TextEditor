@@ -1,8 +1,9 @@
 package texteditor;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 
-public class OpenLastFileClosed implements Operation {
+public class OpenLastFileClosed implements ActionEventOperation {
 	final private Tabs tabs;
 	final private ClosedFiles closedFiles;
     
@@ -12,7 +13,7 @@ public class OpenLastFileClosed implements Operation {
     }
     
     @Override
-    public void operate() {
+    public void actionPerformed(ActionEvent e) {
         if (!closedFiles.isEmpty()) {
             File file = closedFiles.pop();
             tabs.addNewTab(file, Util.readFrom(file.toString()));

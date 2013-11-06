@@ -8,9 +8,13 @@ import javax.swing.JPanel;
 
 public class Button implements ActionListener {
     private JButton button;
-    private Operation operation;
+    private ActionEventOperation operation;
     
-    public Button(String title, JPanel panel, Operation newOperation) {
+    public Button(String title, JPanel panel) {
+    	this(title, panel, new DefaultActionEventOperation());
+    }
+    
+    public Button(String title, JPanel panel, ActionEventOperation newOperation) {
         button = new JButton(title);
         panel.add(button);
         button.addActionListener(this);
@@ -19,6 +23,10 @@ public class Button implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        operation.operate();
+        operation.actionPerformed(e);
+    }
+    
+    public JButton getButton() {
+    	return button;
     }
 }

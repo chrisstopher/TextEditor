@@ -1,10 +1,11 @@
 package texteditor;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
 
-public class OpenFileOperation implements Operation {
+public class OpenFileOperation implements ActionEventOperation {
     private JFileChooser fileChooser;
     private Tabs tabs;
     private Frame mainFrame;
@@ -18,7 +19,7 @@ public class OpenFileOperation implements Operation {
     }
     
     @Override
-    public void operate() {
+    public void actionPerformed(ActionEvent e) {
         int returnVal = fileChooser.showOpenDialog(mainFrame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
@@ -36,7 +37,7 @@ public class OpenFileOperation implements Operation {
     }
     
     private void readFileIntoTextArea(File file) {
-        if (tabs.getTitleOfCurrentTab() != Tabs.DEFAULT_TITLE) {
+    	if (tabs.getTabbedPane().getTabCount() == 0 || tabs.getTitleOfCurrentTab() != Tabs.DEFAULT_TITLE) {
             tabs.addNewTab(file.getName(), file);
         } else {
             tabs.setTitleOfCurrentTab(file.getName());
