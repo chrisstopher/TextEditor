@@ -11,15 +11,19 @@ public class TextArea implements DocumentListener {
     private JTextPane textPane;
     private JScrollPane scrollPane;
     private File file;
-    private Tabs tabs;
+    final private DocumentEventOperation documentEventOperation;
     
-    public TextArea(Tabs newTabs) {
+    public TextArea(){
+    	this(new DocumentEventOperation());
+    }
+    
+    public TextArea(DocumentEventOperation docEventOp) {
         textPane = new JTextPane();
         scrollPane = new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                                                 JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         
         textPane.getDocument().addDocumentListener(this);
-        tabs = newTabs;
+        documentEventOperation = docEventOp;
     }
     
     public JTextPane getTextPane() {
@@ -33,24 +37,28 @@ public class TextArea implements DocumentListener {
     public void setFile(File newFile) {
         file = newFile;
     }
+    
     public File getFile() {
         return file;
+    }
+    
+    public void renameTo(String name) {
+    	//file = new File(file.getParent() + '\\'+ name);
+    	file.renameTo(new File(file.getParent() + '\\'+ name));
     }
 
     @Override
     public void changedUpdate(DocumentEvent arg0) {
-        // TODO Auto-generated method stub
-        
+    	documentEventOperation.changedUpdate(arg0);
     }
 
     @Override
     public void insertUpdate(DocumentEvent arg0) {
-        tabs.addSymbolOnCurrentTab();
+    	documentEventOperation.insertUpdate(arg0);
     }
 
     @Override
     public void removeUpdate(DocumentEvent arg0) {
-        // TODO Auto-generated method stub
-        
+    	documentEventOperation.removeUpdate(arg0);
     }
 }
