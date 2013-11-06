@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class OpenedFiles {
-    private Tabs tabs;
+	private Tabs tabs;
     static final String FILE_WRITTEN_TO = "./resources/lastFilesOpened.txt";
     
     public OpenedFiles(Tabs newTabs) {

@@ -8,8 +8,9 @@ import javax.swing.JPanel;
 
 public class Frame extends JFrame implements WindowListener {
     private OpenedFiles openedFiles;
+    private Tabs tabs;
     
-    public Frame(String title, int width, int height, boolean maximize, JPanel mainPanel, OpenedFiles newOpenedFiles) {
+    public Frame(String title, int width, int height, boolean maximize, JPanel mainPanel, OpenedFiles newOpenedFiles, Tabs newTabs) {
         setTitle(title);
         setSize(width, height);
         setLocationRelativeTo(null);
@@ -21,6 +22,7 @@ public class Frame extends JFrame implements WindowListener {
         addWindowListener(this);
         add(mainPanel);
         openedFiles = newOpenedFiles;
+        tabs = newTabs;
     }
 
     @Override
@@ -37,7 +39,29 @@ public class Frame extends JFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent arg0) {
-        openedFiles.saveFilesToBeOpened();
+    	//if any files not saved then pop up a dialog box
+    	if (tabs.anyOpenFileNotSaved()) {
+    		//not working for now...
+//    		final JDialog dialog = new JDialog(this, "Text Editor", true);
+//    		final JPanel panel = new JPanel();
+//            final TextArea unsavedFiles = new TextArea();
+//            panel.add(unsavedFiles.getScrollPane());
+//            final Button yesButton = new Button("Yes", panel, new SaveAllOpenFilesOperation(tabs));
+//            final Button noButton = new Button("No", panel);
+//            final Button cancelButton = new Button("Cancel", panel);
+//            final JButton[] buttons = {
+//            	yesButton.getButton(), noButton.getButton(), cancelButton.getButton()
+//            };
+//            JOptionPane optionPane = new JOptionPane(panel,
+//                                                     JOptionPane.YES_NO_CANCEL_OPTION,
+//                                                     JOptionPane.WARNING_MESSAGE,
+//                                                     null, buttons, buttons[0]);
+//            dialog.getContentPane().add(optionPane);
+//            dialog.setSize(300, 300);
+//            dialog.setLocationRelativeTo(this);
+//            dialog.setVisible(true);
+    	}
+    	openedFiles.saveFilesToBeOpened();
     }
 
     @Override

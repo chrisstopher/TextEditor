@@ -1,14 +1,15 @@
 package texteditor;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.text.StyleConstants;
 
-
 public class GUI {
     private Frame mainframe;
+    private JMenuBar menuBar;
     private JPanel mainPanel, topPanel, centerPanel;
     private Tabs tabs;
     private ArrayList<Button> buttons;
@@ -19,37 +20,67 @@ public class GUI {
     
     public GUI() {
         mainPanel = new JPanel(new BorderLayout());
+        menuBar = new JMenuBar();
         topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         centerPanel = new JPanel(new BorderLayout());
         closedFiles = new ClosedFiles();
         tabs = new Tabs(closedFiles);
         centerPanel.add(tabs.getTabbedPane(), BorderLayout.CENTER);
         openedFiles = new OpenedFiles(tabs);
+        buttons = new ArrayList<>();
         
-        
-        mainframe = new Frame("Text Processor", 1280, 600, false, mainPanel, openedFiles);
-        mainframe.setJMenuBar(new MenuBar());
+        mainframe = new Frame("Text Processor", 1280, 600, false, mainPanel, openedFiles, tabs);
         
         String fileChooserStartDirectory = ".";
+        ArrayList<MenuItem> operationHolder = new ArrayList<>();
+        operationHolder.add(new MenuItem("Open", KeyEvent.VK_O, true, new OpenFileOperation(tabs, fileChooserStartDirectory, mainframe)));
+        operationHolder.add(new MenuItem("Save", KeyEvent.VK_S, false, new SaveOperation(tabs, fileChooserStartDirectory, mainframe)));
+        operationHolder.add(new MenuItem("Save As", KeyEvent.VK_A, true, new SaveAsOperation(tabs, fileChooserStartDirectory, mainframe)));
+        operationHolder.add(new MenuItem("New Tab", KeyEvent.VK_T, false, new AddNewTabOperation(tabs)));
+        operationHolder.add(new MenuItem("Close Tab", KeyEvent.VK_C, false, new CloseCurrentTabOperation(tabs)));
+        operationHolder.add(new MenuItem("Close All Tabs", KeyEvent.VK_A, true, new CloseAllTabsOperation(tabs)));
+        operationHolder.add(new MenuItem("Open Last File", KeyEvent.VK_L, true, new OpenLastFileClosed(tabs, closedFiles)));
+        operationHolder.add(new MenuItem("Align Left", KeyEvent.VK_L, false, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_LEFT)));
+        operationHolder.add(new MenuItem("Align Center", KeyEvent.VK_C, false, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_CENTER)));
+        operationHolder.add(new MenuItem("Align Right", KeyEvent.VK_R, true, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_RIGHT)));
+        //operationHolders.add(new MenuItem("Foreground Color", false, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.BLACK, tabs, new ChangeForegroundColor()))));
+        //operationHolders.add(new MenuItem("Background Color", false, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.WHITE, tabs, new ChangeForegroundColor()))));
+
+        addMenuItems(operationHolder);
         
-        buttons = new ArrayList<>();
-        buttons.add(new Button("Open", topPanel, new OpenFileOperation(tabs, fileChooserStartDirectory, mainframe)));
-        buttons.add(new Button("Save", topPanel, new SaveOperation(tabs, fileChooserStartDirectory, mainframe)));
-        buttons.add(new Button("Save As", topPanel, new SaveAsOperation(tabs, fileChooserStartDirectory, mainframe)));
-        buttons.add(new Button("New Tab", topPanel, new AddNewTabOperation(tabs)));
-        buttons.add(new Button("Close Tab", topPanel, new CloseCurrentTabOperation(tabs)));
-        buttons.add(new Button("Open Last File", topPanel, new OpenLastFileClosed(tabs, closedFiles)));
-        
-        buttons.add(new Button("Align Left", topPanel, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_LEFT)));
-        buttons.add(new Button("Align Center", topPanel, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_CENTER)));
-        buttons.add(new Button("Align Right", topPanel, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_RIGHT)));
-        
-        buttons.add(new Button("FG Color", topPanel, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.BLACK, tabs, new ChangeForegroundColor()))));
-        buttons.add(new Button("BG Color", topPanel, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.WHITE, tabs, new ChangeBackgroundColor()))));
-        
-        
+        mainframe.setJMenuBar(menuBar);
+
+        addButtons(operationHolder);
+
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
+    }
+    
+    private void addButtons(ArrayList<MenuItem> operationHolder) {
+    	for (MenuItem item : operationHolder) {
+    		buttons.add(new Button(item.getName(), topPanel, item.getActionEventOperation()));
+    	}
+    	buttons.add(new Button("FG Color", topPanel, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.BLACK, tabs, new ChangeForegroundColor()))));
+        buttons.add(new Button("BG Color", topPanel, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.WHITE, tabs, new ChangeBackgroundColor()))));
+    }
+    
+    private void addMenuItems(ArrayList<MenuItem> operationHolder) {
+    	//going to need cut, copy, paste, rename... etc.
+    	
+    	ArrayList<MenuItem> menuItems = new ArrayList<>();
+    	int i;
+    	for (i = 0; i < operationHolder.size() - 3; i++) {
+    		menuItems.add(operationHolder.get(i));
+    	}
+        new Menu("File", KeyEvent.VK_F, menuItems, menuBar);
+        menuItems.clear();
+        
+        for ( ; i < operationHolder.size(); i++) {
+        	menuItems.add(operationHolder.get(i));
+    	}
+        
+        new Menu("Edit", KeyEvent.VK_E, menuItems, menuBar);
+        menuItems.clear();
     }
 }
 
