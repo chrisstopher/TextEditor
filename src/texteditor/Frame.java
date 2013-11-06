@@ -14,7 +14,7 @@ public class Frame extends JFrame implements WindowListener {
         setTitle(title);
         setSize(width, height);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//EXIT_ON_CLOSE);
         if (maximize) {
             setExtendedState(Frame.MAXIMIZED_BOTH);
         }

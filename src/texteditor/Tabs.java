@@ -86,6 +86,9 @@ public class Tabs implements MouseListener {
     }
     
     public void removeCurrentTab() {
+    	if (tabs.getTabCount() == 0) {
+    		return;
+    	}
         removeTab(tabs.getSelectedIndex());
     }
     

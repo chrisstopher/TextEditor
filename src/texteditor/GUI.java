@@ -31,6 +31,7 @@ public class GUI {
         
         mainframe = new Frame("Text Processor", 1280, 600, false, mainPanel, openedFiles, tabs);
         
+        
         String fileChooserStartDirectory = ".";
         ArrayList<MenuItem> operationHolder = new ArrayList<>();
         operationHolder.add(new MenuItem("Open", KeyEvent.VK_O, true, new OpenFileOperation(tabs, fileChooserStartDirectory, mainframe)));
@@ -40,6 +41,9 @@ public class GUI {
         operationHolder.add(new MenuItem("Close Tab", KeyEvent.VK_C, false, new CloseCurrentTabOperation(tabs)));
         operationHolder.add(new MenuItem("Close All Tabs", KeyEvent.VK_A, true, new CloseAllTabsOperation(tabs)));
         operationHolder.add(new MenuItem("Open Last File", KeyEvent.VK_L, true, new OpenLastFileClosed(tabs, closedFiles)));
+        
+        operationHolder.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe)));
+        
         operationHolder.add(new MenuItem("Align Left", KeyEvent.VK_L, false, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_LEFT)));
         operationHolder.add(new MenuItem("Align Center", KeyEvent.VK_C, false, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_CENTER)));
         operationHolder.add(new MenuItem("Align Right", KeyEvent.VK_R, true, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_RIGHT)));
