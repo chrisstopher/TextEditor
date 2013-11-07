@@ -14,9 +14,10 @@ public class GUI {
     private Tabs tabs;
     private ArrayList<Button> buttons;
     
-    private OpenedFiles openedFiles;
-    
+    private OpenedFilesFromLastSession openedFilesFromLastSession;
     private ClosedFiles closedFiles;
+    
+    private ArrayList<MenuItem> operationHolder;
     
     public GUI() {
         mainPanel = new JPanel(new BorderLayout());
@@ -26,17 +27,30 @@ public class GUI {
         closedFiles = new ClosedFiles();
         tabs = new Tabs(closedFiles);
         centerPanel.add(tabs.getTabbedPane(), BorderLayout.CENTER);
-        openedFiles = new OpenedFiles(tabs);
+        openedFilesFromLastSession = new OpenedFilesFromLastSession(tabs);
         buttons = new ArrayList<>();
+        operationHolder = new ArrayList<>();
         
-        mainframe = new Frame("Text Processor", 1280, 600, false, mainPanel, openedFiles, tabs);
+        mainframe = new Frame("Text Processor", 1360, 600, false, mainPanel, openedFilesFromLastSession, tabs);
         
+        createOperations();
         
-        String fileChooserStartDirectory = ".";
-        ArrayList<MenuItem> operationHolder = new ArrayList<>();
-        operationHolder.add(new MenuItem("Open", KeyEvent.VK_O, true, new OpenFileOperation(tabs, fileChooserStartDirectory, mainframe)));
+        addMenuItems();
+        
+        mainframe.setJMenuBar(menuBar);
+
+        addButtons();
+
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+    }
+    
+    private void createOperations() {
+    	String fileChooserStartDirectory = ".";
+    	operationHolder.add(new MenuItem("Open", KeyEvent.VK_O, true, new OpenFileOperation(tabs, fileChooserStartDirectory, mainframe)));
         operationHolder.add(new MenuItem("Save", KeyEvent.VK_S, false, new SaveOperation(tabs, fileChooserStartDirectory, mainframe)));
         operationHolder.add(new MenuItem("Save As", KeyEvent.VK_A, true, new SaveAsOperation(tabs, fileChooserStartDirectory, mainframe)));
+        operationHolder.add(new MenuItem("Rename", KeyEvent.VK_R, true, new RenameFileOperation(tabs)));
         operationHolder.add(new MenuItem("New Tab", KeyEvent.VK_T, false, new AddNewTabOperation(tabs)));
         operationHolder.add(new MenuItem("Close Tab", KeyEvent.VK_C, false, new CloseCurrentTabOperation(tabs)));
         operationHolder.add(new MenuItem("Close All Tabs", KeyEvent.VK_A, true, new CloseAllTabsOperation(tabs)));
@@ -50,17 +64,9 @@ public class GUI {
         //operationHolders.add(new MenuItem("Foreground Color", false, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.BLACK, tabs, new ChangeForegroundColor()))));
         //operationHolders.add(new MenuItem("Background Color", false, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.WHITE, tabs, new ChangeForegroundColor()))));
 
-        addMenuItems(operationHolder);
-        
-        mainframe.setJMenuBar(menuBar);
-
-        addButtons(operationHolder);
-
-        mainPanel.add(topPanel, BorderLayout.NORTH);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
     }
     
-    private void addButtons(ArrayList<MenuItem> operationHolder) {
+    private void addButtons() {
     	for (MenuItem item : operationHolder) {
     		buttons.add(new Button(item.getName(), topPanel, item.getActionEventOperation()));
     	}
@@ -68,7 +74,7 @@ public class GUI {
         buttons.add(new Button("BG Color", topPanel, new ChangeTextColorOperation(new ColoredButton(topPanel, Color.WHITE, tabs, new ChangeBackgroundColor()))));
     }
     
-    private void addMenuItems(ArrayList<MenuItem> operationHolder) {
+    private void addMenuItems() {
     	//going to need cut, copy, paste, rename... etc.
     	
     	ArrayList<MenuItem> menuItems = new ArrayList<>();

@@ -7,10 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 public class Frame extends JFrame implements WindowListener {
-    private OpenedFiles openedFiles;
+    private OpenedFilesFromLastSession openedFilesFromLastSession;
     private Tabs tabs;
     
-    public Frame(String title, int width, int height, boolean maximize, JPanel mainPanel, OpenedFiles newOpenedFiles, Tabs newTabs) {
+    public Frame(String title, int width, int height, boolean maximize, JPanel mainPanel, OpenedFilesFromLastSession newOpenedFilesFromLastSession, Tabs newTabs) {
         setTitle(title);
         setSize(width, height);
         setLocationRelativeTo(null);
@@ -21,7 +21,7 @@ public class Frame extends JFrame implements WindowListener {
         setVisible(true);
         addWindowListener(this);
         add(mainPanel);
-        openedFiles = newOpenedFiles;
+        openedFilesFromLastSession = newOpenedFilesFromLastSession;
         tabs = newTabs;
     }
 
@@ -61,7 +61,7 @@ public class Frame extends JFrame implements WindowListener {
 //            dialog.setLocationRelativeTo(this);
 //            dialog.setVisible(true);
     	}
-    	openedFiles.saveFilesToBeOpened();
+    	openedFilesFromLastSession.saveFilesToBeOpened();
     }
 
     @Override
@@ -84,6 +84,6 @@ public class Frame extends JFrame implements WindowListener {
 
     @Override
     public void windowOpened(WindowEvent arg0) {
-        openedFiles.loadSavedFiles();
+    	openedFilesFromLastSession.loadSavedFiles();
     }
 }
