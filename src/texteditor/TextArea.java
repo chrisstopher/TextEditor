@@ -42,9 +42,14 @@ public class TextArea implements DocumentListener {
         return file;
     }
     
-    public void renameTo(String name) {
-    	//file = new File(file.getParent() + '\\'+ name);
-    	file.renameTo(new File(file.getParent() + '\\'+ name));
+    public boolean renameTo(String name) {
+    	File newFile = new File(file.getParent() + '\\'+ name);
+    	if (file.renameTo(newFile)) {
+    		file = newFile;
+    		return true;
+    	}
+    	return false;
+    	
     }
 
     @Override

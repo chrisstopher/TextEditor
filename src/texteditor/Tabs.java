@@ -45,8 +45,15 @@ public class Tabs implements MouseListener {
     }
     
     public void renameCurrentFileTo(String name) {
-    	setTitleOfCurrentTab(name);
-    	scrollingTextAreas.get(tabs.getSelectedIndex()).renameTo(name);
+    	if (scrollingTextAreas.get(tabs.getSelectedIndex()).renameTo(name)) {
+    		setTitleOfCurrentTab(name);
+    	} else {
+    		JOptionPane.showConfirmDialog(null,
+    									  "Could not rename " + getTitleOfCurrentTab(),
+    									  "Text Editor",
+    									  JOptionPane.OK_CANCEL_OPTION,
+    									  JOptionPane.ERROR_MESSAGE);
+    	}
     }
     
     public void setTextPaneOfCurrentTab(ArrayList<String> strings) {
