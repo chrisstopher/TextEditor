@@ -144,13 +144,22 @@ public class Tabs implements MouseListener {
     	return false;
     }
     
+    public String getFilesNotSaved() {
+    	StringBuilder filesNotSaved = new StringBuilder();
+    	for (int i = 0; i < tabs.getTabCount(); i++) {
+    		if (tabNotSaved(i)) {
+    			filesNotSaved.append(tabs.getTitleAt(i).substring(0, tabs.getTitleAt(i).length() - 1) + "\n");
+    		}
+    	}
+    	return filesNotSaved.toString();
+    }
+    
     public void saveAllFiles() {
     	for (int i = 0; i < tabs.getTabCount(); i++) {
     		if (tabNotSaved(i)) {
     			Util.writeTo(scrollingTextAreas.get(i).getFile(), scrollingTextAreas.get(i).getTextPane().getText());
     		}
     	}
-    	
     }
     
     /**
