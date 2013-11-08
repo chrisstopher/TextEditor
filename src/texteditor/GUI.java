@@ -19,6 +19,8 @@ public class GUI {
     
     private ArrayList<MenuItem> operationHolder;
     
+    //the Exit button does not call windowClosing(...) in the Frame window listener...
+    
     public GUI() {
         mainPanel = new JPanel(new BorderLayout());
         menuBar = new JMenuBar();
@@ -46,8 +48,8 @@ public class GUI {
     }
     
     private void createOperations() {
-    	String fileChooserStartDirectory = ".";
-    	operationHolder.add(new MenuItem("Open", KeyEvent.VK_O, true, new OpenFileOperation(tabs, fileChooserStartDirectory, mainframe)));
+        String fileChooserStartDirectory = ".";
+        operationHolder.add(new MenuItem("Open", KeyEvent.VK_O, true, new OpenFileOperation(tabs, fileChooserStartDirectory, mainframe)));
         operationHolder.add(new MenuItem("Save", KeyEvent.VK_S, false, new SaveOperation(tabs, fileChooserStartDirectory, mainframe)));
         operationHolder.add(new MenuItem("Save As", KeyEvent.VK_A, true, new SaveAsOperation(tabs, fileChooserStartDirectory, mainframe)));
         operationHolder.add(new MenuItem("Rename", KeyEvent.VK_R, true, new RenameFileOperation(tabs)));
@@ -56,7 +58,7 @@ public class GUI {
         operationHolder.add(new MenuItem("Close All Tabs", KeyEvent.VK_A, true, new CloseAllTabsOperation(tabs)));
         operationHolder.add(new MenuItem("Open Last File", KeyEvent.VK_L, true, new OpenLastFileClosed(tabs, closedFiles)));
         
-        operationHolder.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe)));
+        //operationHolder.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe)));
         
         operationHolder.add(new MenuItem("Align Left", KeyEvent.VK_L, false, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_LEFT)));
         operationHolder.add(new MenuItem("Align Center", KeyEvent.VK_C, false, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_CENTER)));
@@ -82,6 +84,7 @@ public class GUI {
     	for (i = 0; i < operationHolder.size() - 3; i++) {
     		menuItems.add(operationHolder.get(i));
     	}
+    	menuItems.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe)));
         new Menu("File", KeyEvent.VK_F, menuItems, menuBar);
         menuItems.clear();
         
