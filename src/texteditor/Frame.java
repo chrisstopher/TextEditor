@@ -63,10 +63,10 @@ public class Frame extends JFrame implements WindowListener {
     			if (saveFiles == JOptionPane.YES_OPTION) {
     				tabs.saveAllFiles();
     			}
+    			openedFilesFromLastSession.saveFilesToBeOpened();
     			setVisible(false);
     			dispose();
     		}
-    		openedFilesFromLastSession.saveFilesToBeOpened();
     		return;
     	}
     	openedFilesFromLastSession.saveFilesToBeOpened();
