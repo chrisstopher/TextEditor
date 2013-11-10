@@ -13,7 +13,7 @@ public class Frame extends JFrame implements WindowListener {
     private OpenedFilesFromLastSession openedFilesFromLastSession;
     private Tabs tabs;
     
-    public Frame(String title, int width, int height, boolean maximize, JPanel mainPanel, OpenedFilesFromLastSession newOpenedFilesFromLastSession, Tabs newTabs) {
+    public Frame(String title, int width, int height, boolean maximize, JPanel contentPanel, OpenedFilesFromLastSession newOpenedFilesFromLastSession, Tabs newTabs) {
         setTitle(title);
         setSize(width, height);
         setLocationRelativeTo(null);
@@ -23,7 +23,8 @@ public class Frame extends JFrame implements WindowListener {
         }
         setVisible(true);
         addWindowListener(this);
-        add(mainPanel);
+        //add(contentPanel);
+        setContentPane(contentPanel);
         openedFilesFromLastSession = newOpenedFilesFromLastSession;
         tabs = newTabs;
     }
