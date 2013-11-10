@@ -19,12 +19,18 @@ public class GUI {
     
     private ArrayList<MenuItem> operationHolder;
     
-    //the Exit button does not call windowClosing(...) in the Frame window listener...
+    //Bugs...
+    //The Exit button in the File menu does not call windowClosing(...) in the Frame window listener...
+    //The Style Changers do not toggle like... if what you select is already bold it does not unbold it...
+    //Duplicated code in ColoredButton and ChangeSelectedText
+    
+    //Bugs fixed:
+    //make the button wrap around off of screen		Found code online see WrapLayout.java
     
     public GUI() {
         mainPanel = new JPanel(new BorderLayout());
         menuBar = new JMenuBar();
-        topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        topPanel = new JPanel(new WrapLayout(FlowLayout.LEFT));//new FlowLayout(FlowLayout.LEFT));
         centerPanel = new JPanel(new BorderLayout());
         closedFiles = new ClosedFiles();
         tabs = new Tabs(closedFiles);
@@ -42,6 +48,8 @@ public class GUI {
         mainframe.setJMenuBar(menuBar);
 
         addButtons();
+        
+        //mainframe.setgl
 
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -59,6 +67,12 @@ public class GUI {
         operationHolder.add(new MenuItem("Open Last File", KeyEvent.VK_L, true, new OpenLastFileClosed(tabs, closedFiles)));
         
         //operationHolder.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe)));
+        
+        operationHolder.add(new MenuItem("<html><b>B</b></html>", KeyEvent.VK_B, false, new ChangeSelectedText(tabs, new TextToBold())));
+        operationHolder.add(new MenuItem("<html><i>I</i></html>", KeyEvent.VK_I, false, new ChangeSelectedText(tabs, new TextToItalics())));
+        operationHolder.add(new MenuItem("<html><u>U</u></html>", KeyEvent.VK_U, false, new ChangeSelectedText(tabs, new TextToUnderline())));
+        operationHolder.add(new MenuItem("<html><strike>S</strike></html>", KeyEvent.VK_S, true, new ChangeSelectedText(tabs, new TextToStrikeThrough())));
+        										//strike is depreciated should use del but it does not work in java
         
         operationHolder.add(new MenuItem("Align Left", KeyEvent.VK_L, false, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_LEFT)));
         operationHolder.add(new MenuItem("Align Center", KeyEvent.VK_C, false, new ChangeTextAlignmentOperation(tabs, StyleConstants.ALIGN_CENTER)));
@@ -80,8 +94,11 @@ public class GUI {
     	//going to need cut, copy, paste, rename... etc.
     	
     	ArrayList<MenuItem> menuItems = new ArrayList<>();
+    	
+    	final int NEXT_MENU_START = 7; //which is starting at the B (bold action)
+    	
     	int i;
-    	for (i = 0; i < operationHolder.size() - 3; i++) {
+    	for (i = 0; i < operationHolder.size() - NEXT_MENU_START; i++) {
     		menuItems.add(operationHolder.get(i));
     	}
     	menuItems.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe)));
