@@ -30,19 +30,19 @@ public class Frame extends JFrame implements WindowListener {
     }
 
     @Override
-    public void windowActivated(WindowEvent arg0) {
+    public void windowActivated(WindowEvent e) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void windowClosed(WindowEvent arg0) {
+    public void windowClosed(WindowEvent e) {
         // TODO Auto-generated method stub
     	
     }
 
     @Override
-    public void windowClosing(WindowEvent arg0) {
+    public void windowClosing(WindowEvent e) {
     	//if any files not saved then pop up a dialog box
     	if (tabs.anyOpenFileNotSaved()) {
     		final JPanel panel = new JPanel(new BorderLayout());
@@ -76,25 +76,25 @@ public class Frame extends JFrame implements WindowListener {
     }
 
     @Override
-    public void windowDeactivated(WindowEvent arg0) {
+    public void windowDeactivated(WindowEvent e) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void windowDeiconified(WindowEvent arg0) {
+    public void windowDeiconified(WindowEvent e) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void windowIconified(WindowEvent arg0) {
+    public void windowIconified(WindowEvent e) {
         // TODO Auto-generated method stub
         
     }
 
     @Override
-    public void windowOpened(WindowEvent arg0) {
+    public void windowOpened(WindowEvent e) {
     	openedFilesFromLastSession.loadSavedFiles();
     }
 }

@@ -22,10 +22,22 @@ public class GUI {
     //Bugs...
     //The Exit button in the File menu does not call windowClosing(...) in the Frame window listener...
     //The Style Changers do not toggle like... if what you select is already bold it does not unbold it...
-    //Duplicated code in ColoredButton and ChangeSelectedText
+    //Does not saved the format of the text
     
     //Bugs fixed:
     //make the button wrap around off of screen		Found code online see WrapLayout.java
+    //The Exit button in the File menu does not call windowClosing(...) in the Frame window listener...
+    //	I copied the code over to where the action gets called it is fixed but now the code is duplicated
+    
+    //Duplicated code in:
+    //ColoredButton in actionPerformed(...) AND ChangeSelectedText in actionPerformed(...)
+    //Exit button in the File menu in actionPerformed(...) AND the Frame in windowClosing(...)
+    
+    //Add:
+    //change selected font style, font size,
+    
+    //Testing:
+    //caret listener on text area
     
     public GUI() {
         mainPanel = new JPanel(new BorderLayout());
@@ -101,7 +113,7 @@ public class GUI {
     	for (i = 0; i < operationHolder.size() - NEXT_MENU_START; i++) {
     		menuItems.add(operationHolder.get(i));
     	}
-    	menuItems.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe)));
+    	menuItems.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe, tabs, openedFilesFromLastSession)));
         new Menu("File", KeyEvent.VK_F, menuItems, menuBar);
         menuItems.clear();
         
