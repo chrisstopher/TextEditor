@@ -27,11 +27,10 @@ public class GUI {
     //Bugs fixed:
     //make the button wrap around off of screen		Found code online see WrapLayout.java
     //The Exit button in the File menu does not call windowClosing(...) in the Frame window listener...
-    //	I copied the code over to where the action gets called it is fixed but now the code is duplicated
+    //	No duplication now, calls a onWindowClosing(...)
     
     //Duplicated code in:
     //ColoredButton in actionPerformed(...) AND ChangeSelectedText in actionPerformed(...)
-    //Exit button in the File menu in actionPerformed(...) AND the Frame in windowClosing(...)
     
     //Add:
     //change selected font style, font size,
@@ -113,7 +112,7 @@ public class GUI {
     	for (i = 0; i < operationHolder.size() - NEXT_MENU_START; i++) {
     		menuItems.add(operationHolder.get(i));
     	}
-    	menuItems.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe, tabs, openedFilesFromLastSession)));
+    	menuItems.add(new MenuItem("Exit", KeyEvent.VK_E, false, new ExitOperation(mainframe)));
         new Menu("File", KeyEvent.VK_F, menuItems, menuBar);
         menuItems.clear();
         
